@@ -78,7 +78,7 @@ if __name__ == '__main__':
         r = requests.post(url=node + "/mine", json=post_data)
         data = r.json()
 
-        print(f'Server Verification: {data["result"]}\n')
+        print(f'Server Verification: {data["result"]}')
 
         # TODO: If the server responds with a 'message' 'New Block Forged'
         # add 1 to the number of coins mined and print it.  Otherwise,
@@ -86,4 +86,5 @@ if __name__ == '__main__':
         miner_reward = 0
         if data['result'] is True:
             miner_reward += 1
+        print(f'Coin balance: {miner_reward}\n')
         pass

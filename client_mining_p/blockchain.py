@@ -140,15 +140,18 @@ def hello_world():
 @app.route('/mine', methods=['POST'])
 def mine():
     data = eval(request.data)
-    print(f'this is data {data}')
+    proof = data['proof']['proof']
+    id = data['id']
+    print(f'proof is {proof} and id {id}')
+    # print(f'this is data {data}')
 
     if "proof" in data and "id" in data:
         block_string = json.dumps(blockchain.last_block, sort_keys=True)
-        proofCheck = blockchain.valid_proof(block_string, data['proof']) 
+        proofCheck = blockchain.valid_proof(block_string, proof) 
 
         return jsonify({
             'message': "Both proof and id Exist",
-            'submitted_proof': data['proof'],
+            'submitted_proof': proof,
             'result': proofCheck,
         }), 200
     else:

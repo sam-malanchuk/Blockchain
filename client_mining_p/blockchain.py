@@ -137,22 +137,34 @@ def hello_world():
     }
     return jsonify(response), 200
 
-@app.route('/mine', methods=['GET'])
+@app.route('/mine', methods=['POST'])
 def mine():
+    data = eval(request.data)
+    print(f'this is data {data}')
+
+    if "proof" in data and "id" in data:
+        return jsonify("Both proof and id Exist"), 200
+    else:
+        if "proof" in data:
+            return jsonify("missing id"), 206
+        else:
+            return jsonify("missing proof"), 206
+
     # Run the proof of work algorithm to get the next proof
-    print("We shall now mine a block!")
-    proof = blockchain.proof_of_work(blockchain.last_block)
-    print(f'After a long process, we got a value {proof}')
+    # print("We shall now mine a block!")
+    # proof = blockchain.proof_of_work(blockchain.last_block)
+    # print(f'After a long process, we got a value {proof}')
 
     # Forge the new Block by adding it to the chain with the proof
-    new_block = blockchain.new_block(proof)
+    # new_block = blockchain.new_block(proof)
 
-    response = {
-        # TODO: Send a JSON response with the new block
-        'block': new_block
-    }
+    # response = {
+    #     # TODO: Send a JSON response with the new block
+    #     # 'block': new_block
+    #     'sup': 'else'
+    # }
 
-    return jsonify(response), 200
+    # return jsonify(response), 200
 
 
 @app.route('/chain', methods=['GET'])

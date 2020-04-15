@@ -118,7 +118,7 @@ class Blockchain(object):
         print(hash_value)
 
         # return True or False
-        return hash_value[:3] == '000'
+        return hash_value[:3] == '000000'
 
 
 # Instantiate our Node

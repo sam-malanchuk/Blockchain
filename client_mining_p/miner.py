@@ -31,12 +31,12 @@ def valid_proof(block_string, proof):
     :return: True if the resulting hash is a valid proof, False otherwise
     """
     # TODO
-    print(f'I will now check if {proof} is valid')
+    # print(f'I will now check if {proof} is valid')
     guess = block_string + str(proof)
     guess = guess.encode()
 
     hash_value = hashlib.sha256(guess).hexdigest()
-    print(hash_value)
+    # print(hash_value)
 
     # return True or False
     return hash_value[:6] == '000000'
@@ -68,17 +68,22 @@ if __name__ == '__main__':
             break
 
         # TODO: Get the block from `data` and use it to look for a new proof
+        print('Mining has begun')
         new_proof = proof_of_work(data['block'])
+        print('New proof found!')
 
         # When found, POST it to the server {"proof": new_proof, "id": id}
         post_data = {"proof": new_proof, "id": id}
 
-        print(f'here is the incoming data', post_data)
-
         r = requests.post(url=node + "/mine", json=post_data)
         data = r.json()
+
+        print(f'Server Verification: {data["result"]}\n')
 
         # TODO: If the server responds with a 'message' 'New Block Forged'
         # add 1 to the number of coins mined and print it.  Otherwise,
         # print the message from the server.
+        miner_reward = 0
+        if data['result'] is True:
+            miner_reward += 1
         pass

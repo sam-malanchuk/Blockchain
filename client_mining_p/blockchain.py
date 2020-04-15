@@ -118,7 +118,7 @@ class Blockchain(object):
         print(hash_value)
 
         # return True or False
-        return hash_value[:3] == '000000'
+        return hash_value[:6] == '000000'
 
 
 # Instantiate our Node
@@ -140,7 +140,7 @@ def hello_world():
 @app.route('/mine', methods=['POST'])
 def mine():
     data = eval(request.data)
-    proof = data['proof']['proof']
+    proof = data['proof']
     id = data['id']
     print(f'proof is {proof} and id {id}')
     # print(f'this is data {data}')
@@ -148,6 +148,10 @@ def mine():
     if "proof" in data and "id" in data:
         block_string = json.dumps(blockchain.last_block, sort_keys=True)
         proofCheck = blockchain.valid_proof(block_string, proof) 
+
+        if proofCheck is True:
+            # Forge the new Block by adding it to the chain with the proof
+            new_block = blockchain.new_block(proof)
 
         return jsonify({
             'message': "Both proof and id Exist",

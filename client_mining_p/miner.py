@@ -68,10 +68,12 @@ if __name__ == '__main__':
             break
 
         # TODO: Get the block from `data` and use it to look for a new proof
-        new_proof = data['block']
+        new_proof = proof_of_work(data['block'])
 
         # When found, POST it to the server {"proof": new_proof, "id": id}
         post_data = {"proof": new_proof, "id": id}
+
+        print(f'here is the incoming data', post_data)
 
         r = requests.post(url=node + "/mine", json=post_data)
         data = r.json()

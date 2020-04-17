@@ -16,6 +16,24 @@ class Blockchain(object):
         # Create the genesis block
         self.new_block(previous_hash=1, proof=100)
 
+    def new_transaction(self, sender, recipient, amount):
+        """
+        Creates a new transaction to go into the next mined block
+
+        :param sender: <str> Address of the Sender
+        :param recipient: <str> Address of the Recipient
+        :param amount: <int> Amount
+        :return: <int> The index of the Block that will hold this transaction
+        """
+
+        self.current_transactions.append({
+            'sender': sender,
+            'recipient': recipient,
+            'amount': amount
+        })
+
+        return self.last_block['index'] + 1
+
     def new_block(self, proof, previous_hash=None):
         """
         Create a new Block in the Blockchain
@@ -151,6 +169,11 @@ def mine():
 
         if proofCheck is True:
             # Forge the new Block by adding it to the chain with the proof
+            blockchain.new_transaction(
+                sender="0",
+                recipient=id,
+                amount=1
+            )
             new_block = blockchain.new_block(proof)
 
         return jsonify({
@@ -178,6 +201,22 @@ def last_block():
     response = {
         'block': blockchain.last_block
     }
+    return jsonify(response), 200
+
+@app.route('/transactions/new', methods=['POST'])
+def new_transaction():
+    data = eval(request.data)
+
+    # check that required fields are present
+    if 'recipient' not in data or 'amount' not in data or 'sender' not in data:
+        response = { 'message': 'Error: missing values' }
+        return jsonify(response), 400
+
+    # Check that this transaction is valid
+
+    # create the new transaction
+    index = blockchain.new_transaction(data['sender'], data['recipient'], data['amount'])
+    response = { 'message': f'Transaction will be posted in block with index {index}'}
     return jsonify(response), 200
 
 # Run the program on port 8000

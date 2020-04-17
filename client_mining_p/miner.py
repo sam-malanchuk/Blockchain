@@ -87,4 +87,4 @@ if __name__ == '__main__':
         # print the message from the server.
         if data['result'] is True:
             miner_reward += 1
-        print(f'Coin balance: {miner_reward}\n')
+        print(f'Coins Earned in session: {miner_reward}\n')

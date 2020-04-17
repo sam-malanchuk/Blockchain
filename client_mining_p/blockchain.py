@@ -169,12 +169,12 @@ def mine():
 
         if proofCheck is True:
             # Forge the new Block by adding it to the chain with the proof
-            new_block = blockchain.new_block(proof)
             blockchain.new_transaction(
                 sender="0",
                 recipient=id,
                 amount=1
             )
+            new_block = blockchain.new_block(proof)
 
         return jsonify({
             'message': "Both proof and id Exist",

@@ -20,27 +20,7 @@ if len(sys.argv) > 1:
 else:
     node = "http://localhost:8000"
 
-# Welcome message to the client portal
-# @app.route('/', methods=['GET'])
-# def welcome_message():
-#     return 'Welcome to the Wallet!', 200
-
-# Form to enter user-id to check
-# @app.route('/')
-# def my_form():
-#     return render_template("form_input.html")
-
-# Form to accept input from user form
-@app.route('/', methods=['POST'])
-def my_form_post():
-    text = request.form['text']
-    processed_text = text.upper()
-    return processed_text
-
-    print(f'I got the response, it is: {text}')
-
-@app.route('/')
-def get_chain():
+def get_stats(user_id):
     data = {}
     r = requests.get(url=node + "/chain")
     # Handle non-json response
@@ -54,27 +34,39 @@ def get_chain():
     if data == {}:
         return "No data found."
     else:
-        user = 'sam-malanchuk'
         wallet_total = 0
         user_transactions = []
         chain = data['chain']
         chain_length = data['len']
         for block in chain:
             for record in block['transactions']:
-                if record['recipient'] == user or record['sender'] == user:
+                if record['recipient'] == user_id or record['sender'] == user_id:
                     user_transactions.append(record)
-                    if record['recipient'] == user:
+                    if record['recipient'] == user_id:
                         wallet_total += int(record['amount'])
                     else:
                         wallet_total -= int(record['amount'])
         if len(user_transactions) == 0:
-            return f'nothing found for user {user}'
+            return f'nothing found for user {user_id}'
         else:
             return jsonify({
-                'user': user,
+                'user': user_id,
                 'wallet_total': wallet_total,
                 'user_transactions': user_transactions,
             }), 200
+
+# Form to enter user-id to check
+@app.route('/')
+def my_form():
+    return render_template("form_input.html")
+
+# Form to accept input from user form
+@app.route('/', methods=['POST'])
+def my_form_post():
+    user_id = request.form['text']
+    return get_stats(user_id)
+    # processed_text = text.upper()
+    # return processed_text
 
 # Run the program on port 8000
 if __name__ == '__main__':
